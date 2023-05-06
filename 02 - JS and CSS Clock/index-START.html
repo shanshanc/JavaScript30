@@ -63,11 +63,42 @@
       background: black;
       position: absolute;
       top: 50%;
+      transform-origin: 100%;
+      transform: rotate(90deg);
     }
 
   </style>
 
   <script>
+    const OFFSET_DEGREE = 90;
+    const HOUR_TO_DEGREE = 30; // 360/12 把360度分配給12個小時
+    const MIN_AND_SECOND_TO_DEGREE = 6; // 360/60 把360度分配給60分鐘或秒
+
+    let timer;
+    let hour, minute, second;
+
+    function updateClock(currentHour, currentMinute, currentSecond) {
+      const hourHand = document.querySelector('.hour-hand');
+      const minHand = document.querySelector('.min-hand');
+      const secondHand = document.querySelector('.second-hand');
+
+      if (hour !== currentHour) {
+        hour = currentHour;
+        hourHand.style.transform = `rotate(${OFFSET_DEGREE + (currentHour + currentMinute/60) * HOUR_TO_DEGREE}deg)`;
+      }
+
+      if (minute !== currentMinute) {
+        minute = currentMinute;
+        minHand.style.transform = `rotate(${OFFSET_DEGREE + currentMinute * MIN_AND_SECOND_TO_DEGREE}deg)`;
+      }
+      
+      secondHand.style.transform = `rotate(${OFFSET_DEGREE + currentSecond * MIN_AND_SECOND_TO_DEGREE}deg)`;
+    }
+  
+    timer = setInterval(() => {
+      const current = new Date(Date.now());
+      updateClock(current.getHours(), current.getMinutes(), current.getSeconds());
+    }, 1000)
 
 
   </script>
