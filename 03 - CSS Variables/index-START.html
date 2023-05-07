@@ -22,6 +22,21 @@
   <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
 
   <style>
+    :root {
+      --base: #ffc600;
+      --spacing: 10px;
+      --blur: 10px;
+    }
+
+    img {
+      background-color: var(--base);
+      padding: var(--spacing);
+      filter: blur(var(--blur));
+    }
+
+    .hl {
+      color: var(--base);
+    }
 
     /*
       misc styles, nothing to do with CSS variables
@@ -46,6 +61,26 @@
   </style>
 
   <script>
+    let root = document.documentElement;
+  
+    const spacingRange = document.getElementById('spacing');
+    const blurRange = document.getElementById('blur');
+    const baseRange = document.getElementById('base');
+
+    spacingRange.addEventListener('input', (evt) => {
+      const inputValue = evt.target.value;
+      root.style.setProperty('--spacing', inputValue + 'px');
+    });
+
+    blurRange.addEventListener('input', (evt) => {
+      root.style.setProperty('--blur', evt.target.value + 'px');
+    });
+
+    baseRange.addEventListener('input', (evt) => {
+      console.log('base value: ', evt.target.value);
+      root.style.setProperty('--base', evt.target.value);
+    });
+
   </script>
 
 </body>
