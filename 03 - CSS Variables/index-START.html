@@ -62,25 +62,18 @@
 
   <script>
     let root = document.documentElement;
-  
-    const spacingRange = document.getElementById('spacing');
-    const blurRange = document.getElementById('blur');
-    const baseRange = document.getElementById('base');
+    const inputs = document.querySelectorAll('input');
 
-    spacingRange.addEventListener('input', (evt) => {
-      const inputValue = evt.target.value;
-      root.style.setProperty('--spacing', inputValue + 'px');
-    });
+    function handleUpdate(evt) {
+      const { name, value, dataset } = evt.target;
+      const suffix = dataset.sizing || '';
 
-    blurRange.addEventListener('input', (evt) => {
-      root.style.setProperty('--blur', evt.target.value + 'px');
-    });
+      root.style.setProperty(`--${name}`, value + suffix);
+    }
 
-    baseRange.addEventListener('input', (evt) => {
-      console.log('base value: ', evt.target.value);
-      root.style.setProperty('--base', evt.target.value);
-    });
-
+    inputs.forEach((input) => input.addEventListener('change', handleUpdate));
+    // 多加一個 mousemove，在每一次游標移動時都更新
+    inputs.forEach((input) => input.addEventListener('mousemove', handleUpdate));
   </script>
 
 </body>
