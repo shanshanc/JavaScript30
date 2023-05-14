@@ -16,16 +16,24 @@
     </ul>
   </form>
 <script>
-let input = '';
 // let filtered = [];
-let cities;
+const cities = [];
 const ulElement = document.querySelector('ul');
 const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 fetch(endpoint)
   .then((blob) => blob.json())
-  .then((json) => {
-    cities = [...json];
+  .then((data) => {
+    cities.push(...data);
   });
+
+function findMatches(input) {
+  return cities
+    .filter((item) => {
+      // return (item.city.toLowerCase().includes(input) || item.state.toLowerCase().includes(input));
+      const wordToMatch = new RegExp(input, 'gi');
+      return (item.city.match(wordToMatch) || item.state.match(wordToMatch)); 
+    })
+}
 
 function generatePopulationString(population) {
   const pattern = /\B(?=(\d{3})+(?!\d))/g;
@@ -34,12 +42,11 @@ function generatePopulationString(population) {
 }
 
 function handleSearchInput(evt) {
-  input = evt.target.value;
-  const suggestions = document.querySelector('.suggestions')
-  const filteredLi = cities
-    .filter((item) => {
-      return (item.city.toLowerCase().includes(input) || item.state.toLowerCase().includes(input));
-    })
+  const input = evt.target.value;
+  const matchedData = findMatches(input);
+  const suggestions = document.querySelector('.suggestions');
+
+  const filteredLi = matchedData
     .map((item) => {
       const searchTerm = new RegExp(input, 'gi');
       const spanStr = `<span class="hl">${input}</span>`
@@ -60,13 +67,13 @@ function handleSearchInput(evt) {
       return content;
     }).join('');
 
-  console.log('filteredLi: ', filteredLi);
   suggestions.innerHTML = filteredLi;
 }
 
 
 const searchInput = document.querySelector('.search');
 
+// Get data first and then hook the event listners
 searchInput.addEventListener('change', handleSearchInput);
 searchInput.addEventListener('keyup', handleSearchInput);
 
