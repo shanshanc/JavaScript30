@@ -16,7 +16,59 @@
     </ul>
   </form>
 <script>
+let input = '';
+// let filtered = [];
+let cities;
+const ulElement = document.querySelector('ul');
 const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+fetch(endpoint)
+  .then((blob) => blob.json())
+  .then((json) => {
+    cities = [...json];
+  });
+
+function generatePopulationString(population) {
+  const pattern = /\B(?=(\d{3})+(?!\d))/g;
+  const str = population.toString().replace(pattern, ',');
+  return str;
+}
+
+function handleSearchInput(evt) {
+  input = evt.target.value;
+  const suggestions = document.querySelector('.suggestions')
+  const filteredLi = cities
+    .filter((item) => {
+      return (item.city.toLowerCase().includes(input) || item.state.toLowerCase().includes(input));
+    })
+    .map((item) => {
+      const searchTerm = new RegExp(input, 'gi');
+      const spanStr = `<span class="hl">${input}</span>`
+
+      // 組成要顯示的城市名和州名, 搜尋字加上class
+      const cityName = item.city.replace(searchTerm, spanStr);
+      const stateName = item.state.replace(searchTerm, spanStr);
+
+      // 加上population
+      const population = generatePopulationString(item.population);
+
+      const content = `
+        <li>
+          <span>${cityName}, ${stateName}</span>
+          <span>${population}</span>
+        </li>
+      `
+      return content;
+    }).join('');
+
+  console.log('filteredLi: ', filteredLi);
+  suggestions.innerHTML = filteredLi;
+}
+
+
+const searchInput = document.querySelector('.search');
+
+searchInput.addEventListener('change', handleSearchInput);
+searchInput.addEventListener('keyup', handleSearchInput);
 
 </script>
 </body>
