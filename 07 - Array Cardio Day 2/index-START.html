@@ -50,6 +50,12 @@
     // delete the comment with the ID of 823423
     const idx = comments.findIndex((comment) => comment.id === 823423);
     comments.splice(idx, 1);
+    // 或是
+    // const newComments = [
+    //   ...comments.slice(0, idx),
+    //   ...comments.slice(idx + 1)
+    // ]
+    // console.log({newComments});
     console.log('comments: ', comments);
 
   </script>
